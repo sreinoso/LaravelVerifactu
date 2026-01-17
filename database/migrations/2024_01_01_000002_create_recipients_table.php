@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -8,8 +10,9 @@ class CreateRecipientsTable extends Migration {
     public function up(): void
     {
         Schema::create('recipients', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('invoice_id')->constrained('invoices')->onDelete('cascade');
+            $table->bigIncrements('id');
+            $table->bigInteger('invoice_id')->unsigned()->nullable();
+            $table->foreign('invoice_id')->references('id')->on('invoices')->onDelete('cascade');
             $table->string('name', 120);
             $table->string('tax_id', 20);
             $table->string('country', 2)->nullable();
@@ -26,4 +29,4 @@ class CreateRecipientsTable extends Migration {
     {
         Schema::dropIfExists('recipients');
     }
-}; 
+};
