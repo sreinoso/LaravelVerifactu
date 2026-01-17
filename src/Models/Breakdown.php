@@ -13,13 +13,7 @@ use Squareetlabs\VeriFactu\Enums\OperationType;
 
 class Breakdown extends Model
 {
-    use HasFactory;
     use SoftDeletes;
-
-    protected static function newFactory()
-    {
-        return \Database\Factories\Squareetlabs\VeriFactu\Models\BreakdownFactory::new();
-    }
 
     protected $table = 'breakdowns';
 
@@ -46,4 +40,4 @@ class Breakdown extends Model
     {
         return $this->belongsTo(Invoice::class);
     }
-} 
+}

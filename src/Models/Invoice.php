@@ -6,21 +6,14 @@ namespace Squareetlabs\VeriFactu\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Squareetlabs\VeriFactu\Enums\InvoiceType;
 
-class Invoice extends Model
-{
-    use HasFactory;
+class Invoice extends Model {
     use SoftDeletes;
 
-    protected static function newFactory()
-    {
-        return \Database\Factories\Squareetlabs\VeriFactu\Models\InvoiceFactory::new();
-    }
+    public static function boot() {
+        parent::boot();
 
-    protected static function booted()
-    {
         static::saving(function ($invoice) {
             // Preparar datos para el hash
             $hashData = [
@@ -35,6 +28,12 @@ class Invoice extends Model
             ];
             $hashResult = \Squareetlabs\VeriFactu\Helpers\HashHelper::generateInvoiceHash($hashData);
             $invoice->hash = $hashResult['hash'];
+            $invoice->uuid = (string) \Illuminate\Support\Str::uuid();
+        });
+
+        static::creating(function ($invoice) {
+            // Genera un UUID al crear una nueva factura
+            $invoice->uuid = (string) \Illuminate\Support\Str::uuid();
         });
     }
 
@@ -79,4 +78,4 @@ class Invoice extends Model
     {
         return $this->hasMany(Recipient::class);
     }
-} 
+}
